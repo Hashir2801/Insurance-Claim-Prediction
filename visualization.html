@@ -1,0 +1,55 @@
+{% extends "base2.html" %}
+{% block content %}
+<div class="container-fluid mt-4">
+  <div class="row">
+    
+    <!-- Sidebar Buttons -->
+    <div class="col-md-3">
+      <div class="d-flex flex-column gap-3">
+        <button class="btn btn-outline-primary w-100">Target Distribution</button>
+        <button class="btn btn-outline-primary w-100">Missing Patterns</button>
+        <button class="btn btn-outline-primary w-100">Feature Distributions</button>
+        <button class="btn btn-outline-primary w-100">Correlations</button>
+        <button class="btn btn-outline-primary w-100">Group Distributions</button>
+      </div>
+    </div>
+
+    <!-- Output Display -->
+    <div class="col-md-9">
+      <div class="carousel-container position-relative">
+        
+        <div id="vizCarousel" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner text-center">
+
+            <!-- Slide 1 -->
+            <div class="carousel-item active">
+              <h3 class="fw-bold text-primary mb-3">Target Variable Distribution</h3>
+              <img src="{{ url_for('static', filename='images/visualizations/target_distribution.png') }}" class="img-fluid shadow-lg rounded" alt="Target Distribution">
+              <p class="mt-3 text-muted">Shows class imbalance between claims and non-claims.</p>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="carousel-item">
+              <h3 class="fw-bold text-danger mb-3">Missing Value Patterns</h3>
+              <img src="{{ url_for('static', filename='images/visualizations/missing_values_heatmap.png') }}" class="img-fluid shadow-lg rounded" alt="Missing Heatmap">
+              <p class="mt-3 text-muted">White areas represent missing data.</p>
+            </div>
+
+            <!-- Add more slides as needed -->
+          </div>
+
+          <!-- Controls -->
+          <button class="carousel-control-prev" type="button" data-bs-target="#vizCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#vizCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

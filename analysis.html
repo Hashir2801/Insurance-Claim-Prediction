@@ -1,0 +1,139 @@
+{% extends "base2.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Data Analysis</h2>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Basic Information</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Number of Rows</th>
+                        <td>{{ results.basic_info.rows }}</td>
+                    </tr>
+                    <tr>
+                        <th>Number of Columns</th>
+                        <td>{{ results.basic_info.columns }}</td>
+                    </tr>
+                    <tr>
+                        <th>Total Missing Values</th>
+                        <td>{{ results.basic_info.missing_values }}</td>
+                    </tr>
+                    <tr>
+                        <th>Target Distribution (0: No Claim, 1: Claim)</th>
+                        <td>{{ results.basic_info.target_distribution }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Data Types</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Binary Features</h5>
+                        <ul>
+                            {% for feature in results.data_types.binary %}
+                            <li>{{ feature }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Categorical Features</h5>
+                        <ul>
+                            {% for feature in results.data_types.categorical %}
+                            <li>{{ feature }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Feature Groups</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h5>Individual Features</h5>
+                        <ul>
+                            {% for feature in results.feature_groups.individual[:5] %}
+                            <li>{{ feature }}</li>
+                            {% endfor %}
+                            {% if results.feature_groups.individual|length > 5 %}
+                            <li>... and {{ results.feature_groups.individual|length - 5 }} more</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <h5>Regional Features</h5>
+                        <ul>
+                            {% for feature in results.feature_groups.regional %}
+                            <li>{{ feature }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <h5>Car Features</h5>
+                        <ul>
+                            {% for feature in results.feature_groups.car[:5] %}
+                            <li>{{ feature }}</li>
+                            {% endfor %}
+                            {% if results.feature_groups.car|length > 5 %}
+                            <li>... and {{ results.feature_groups.car|length - 5 }} more</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <h5>Calculated Features</h5>
+                        <ul>
+                            {% for feature in results.feature_groups.calculated[:5] %}
+                            <li>{{ feature }}</li>
+                            {% endfor %}
+                            {% if results.feature_groups.calculated|length > 5 %}
+                            <li>... and {{ results.feature_groups.calculated|length - 5 }} more</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Sample Data</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                {% for key in results.sample_data[0].keys() %}
+                                <th>{{ key }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in results.sample_data %}
+                            <tr>
+                                {% for value in row.values() %}
+                                <td>{{ value }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

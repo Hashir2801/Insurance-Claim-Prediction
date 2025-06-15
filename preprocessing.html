@@ -1,0 +1,131 @@
+{% extends "base2.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Data Preprocessing</h2>
+    
+    <!-- Missing Values Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4>Missing Value Handling</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Before Processing</h5>
+                            <div class="alert alert-danger">
+                                <strong>{{ results.missing_values.before }}</strong> missing values (-1)
+                            </div>
+                            <p class="text-muted">Original dataset contained -1 values representing missing data</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>After Processing</h5>
+                            <div class="alert alert-success">
+                                <strong>{{ results.missing_values.after }}</strong> missing values remaining
+                            </div>
+                            <p class="text-muted">Missing values replaced with median for numerical features</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Categorical Features Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4>Categorical Feature Encoding</h4>
+        </div>
+        <div class="card-body">
+            <p>Total categorical features: {{ feature_info.categorical_features|length }}</p>
+            <p>OneHotEncoder created {{ encoder.get_feature_names_out()|length }} binary features</p>
+            
+            <div class="row mt-3">
+                {% for feature, info in results.categorical_features.items() %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>{{ feature }}</h5>
+                            <p><strong>Unique values:</strong> {{ info['unique_values'] }}</p>
+                            <p><strong>Sample values:</strong></p>
+                            <ul>
+                                {% for val in info['sample_values'] %}
+                                <li>{{ val }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Numerical Features Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4>Numerical Feature Processing</h4>
+        </div>
+        <div class="card-body">
+            <p>Total numerical features: {{ results.numerical_features.count }}</p>
+            <p>Missing values replaced with median:</p>
+            
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Median Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for feature, median in results.numerical_features.sample_medians.items() %}
+                    <tr>
+                        <td>{{ feature }}</td>
+                        <td>{{ "%.2f"|format(median) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Sample Data Comparison -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4>Sample Data Comparison</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Before Preprocessing</h5>
+                    <table class="table table-bordered">
+                        {% for feature, value in results.sample_data.before.items() %}
+                        <tr>
+                            <th>{{ feature }}</th>
+                            <td>{{ value }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h5>After Preprocessing</h5>
+                    <table class="table table-bordered">
+                        {% for feature, value in results.sample_data.after.items() %}
+                        <tr>
+                            <th>{{ feature }}</th>
+                            <td>{{ value }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

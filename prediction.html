@@ -1,0 +1,136 @@
+{% extends "base2.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Claim Prediction</h2>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Input Customer Data</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('prediction') }}">
+                    <div class="row">
+                        {% for feature in feature_info['original_features'][:10] %}  {# Limit to first 10 for demo #}
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ feature }}" class="form-label">{{ feature }}</label>
+                            <input type="text" class="form-control" id="{{ feature }}" name="{{ feature }}" 
+                                   placeholder="Enter value for {{ feature }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Predict</button>
+                </form>
+            </div>
+        </div>
+        
+        {% if rf_pred is defined %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Prediction Results</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Random Forest</h5>
+                        <p><strong>Prediction:</strong> {{ 'High Risk (Claim Likely)' if rf_pred == 1 else 'Low Risk (Claim Unlikely)' }}</p>
+                        <p><strong>Probability:</strong> {{ "%.2f"|format(rf_prob * 100) }}%</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Artificial Neural Network</h5>
+                        <p><strong>Prediction:</strong> {{ 'High Risk (Claim Likely)' if ann_pred == 1 else 'Low Risk (Claim Unlikely)' }}</p>
+                        <p><strong>Probability:</strong> {{ "%.2f"|format(ann_prob * 100) }}%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Model Performance Metrics</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Random Forest</h5>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Accuracy</th>
+                                <td>{{ "%.2f"|format(model_metrics['rf']['accuracy'] * 100) }}%</td>
+                            </tr>
+                            <tr>
+                                <th>Precision</th>
+                                <td>{{ "%.2f"|format(model_metrics['rf']['precision'] * 100) }}%</td>
+                            </tr>
+                            <tr>
+                                <th>Recall</th>
+                                <td>{{ "%.2f"|format(model_metrics['rf']['recall'] * 100) }}%</td>
+                            </tr>
+                            <tr>
+                                <th>F1 Score</th>
+                                <td>{{ "%.2f"|format(model_metrics['rf']['f1'] * 100) }}%</td>
+                            </tr>
+                            <tr>
+                                <th>ROC AUC</th>
+                                <td>{{ "%.2f"|format(model_metrics['rf']['roc_auc'] * 100) }}%</td>
+                            </tr>
+                        </table>
+                        <img src="{{ url_for('static', filename='images/randomforest_conf_matrix.png') }}" 
+                             alt="Random Forest Confusion Matrix" class="img-fluid">
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Artificial Neural Network</h5>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Accuracy</th>
+                                <td>{{ "%.2f"|format(model_metrics['ann']['accuracy'] * 100) }}%</td>
+                            </tr>
+                            <tr>
+                                <th>Precision</th>
+                                <td>{{ "%.2f"|format(model_metrics['ann']['precision'] * 100) }}%</td>
+                            </tr>
+                            <tr>
+                                <th>Recall</th>
+                                <td>{{ "%.2f"|format(model_metrics['ann']['recall'] * 100) }}%</td>
+                            </tr>
+                            <tr>
+                                <th>F1 Score</th>
+                                <td>{{ "%.2f"|format(model_metrics['ann']['f1'] * 100) }}%</td>
+                            </tr>
+                            <tr>
+                                <th>ROC AUC</th>
+                                <td>{{ "%.2f"|format(model_metrics['ann']['roc_auc'] * 100) }}%</td>
+                            </tr>
+                        </table>
+                        <img src="{{ url_for('static', filename='images/ann_conf_matrix.png') }}" 
+                             alt="ANN Confusion Matrix" class="img-fluid">
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h5>Model Comparison</h5>
+                        <img src="{{ url_for('static', filename='images/model_comparison.png') }}" 
+                             alt="Model Comparison" class="img-fluid">
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5>Random Forest ROC Curve</h5>
+                        <img src="{{ url_for('static', filename='images/randomforest_roc_curve.png') }}" 
+                             alt="Random Forest ROC Curve" class="img-fluid">
+                    </div>
+                    <div class="col-md-6">
+                        <h5>ANN ROC Curve</h5>
+                        <img src="{{ url_for('static', filename='images/ann_roc_curve.png') }}" 
+                             alt="ANN ROC Curve" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
